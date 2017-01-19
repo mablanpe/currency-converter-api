@@ -39,6 +39,8 @@ node {
     // ------------------------------------
    // -- ETAPA: Generando Javadocs
    // ------------------------------------
+    checkout scm
+    def mavenSettingsFile = "${pwd()}/.m2/settings.xml"
   stage 'Build Web App'
     wrap([$class: 'ConfigFileBuildWrapper',
         managedFiles: [[fileId: 'maven-settings-for-gameoflife', targetLocation: "${mavenSettingsFile}"]]]) {
