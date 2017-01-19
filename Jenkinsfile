@@ -36,7 +36,32 @@ node {
          currentBuild.result = 'FAILURE'
       throw err
    }
-   
+    // ------------------------------------
+   // -- ETAPA: Revisado calidad de codigo
+   // ------------------------------------
+   stage 'Code Quality'
+
+node {
+
+   parallel (
+        'pmd' : {
+            // static code analysis
+            unstash 'source'
+
+            gradle.codeQuality()
+            step([$class: 'PmdPublisher', pattern: 'build/reports/pmd/*.xml'])
+        },
+        'jacoco': {
+            // jacoco report rendering
+            unstash 'source'
+            unstash 'unitCodeCoverage'
+            unstash 'commitIntegrationCodeCoverage'
+
+            gradle.aggregateJaCoCoReports()
+            publishHTML(target: [reportDir:'build/reports/jacoco/jacocoRootTestReport/html', reportFiles: 'index.html', reportName: 'Code Coverage'])
+        }
+      )
+}
    // ------------------------------------
    // -- ETAPA: Instalar
    // ------------------------------------
