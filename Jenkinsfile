@@ -41,7 +41,7 @@ node {
    // ------------------------------------
   stage('Generate Javadocs') {
             withEnv([
-                    "PATH+MVN=${tool 'mvnHome'}/bin",
+                    "PATH+MVN=${tool 'Maven3'}/bin",
                     "JAVA_HOME=${tool 'jdk8'}",
                     "PATH+GROOVY=${tool 'groovy'}/bin",
                     'PATH+JAVA=${JAVA_HOME}/bin',
