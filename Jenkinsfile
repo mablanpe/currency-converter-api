@@ -37,31 +37,18 @@ node {
       throw err
    }
     // ------------------------------------
-   // -- ETAPA: Revisado calidad de codigo
+   // -- ETAPA: Generando Javadocs
    // ------------------------------------
-   stage 'Code Quality'
-
-node {
-
-   parallel (
-        'pmd' : {
-            // static code analysis
-            unstash 'source'
-
-            gradle.codeQuality()
-            step([$class: 'PmdPublisher', pattern: 'build/reports/pmd/*.xml'])
-        },
-        'jacoco': {
-            // jacoco report rendering
-            unstash 'source'
-            unstash 'unitCodeCoverage'
-            unstash 'commitIntegrationCodeCoverage'
-
-            gradle.aggregateJaCoCoReports()
-            publishHTML(target: [reportDir:'build/reports/jacoco/jacocoRootTestReport/html', reportFiles: 'index.html', reportName: 'Code Coverage'])
+  stage('Generate Javadocs') {
+            withEnv([
+                    "PATH+MVN=${tool 'mvn'}/bin",
+                    "JAVA_HOME=${tool 'jdk8'}",
+                    "PATH+GROOVY=${tool 'groovy'}/bin",
+                    'PATH+JAVA=${JAVA_HOME}/bin',
+                ]) {
+                sh './scripts/generate-javadoc.sh'
+            }
         }
-      )
-}
    // ------------------------------------
    // -- ETAPA: Instalar
    // ------------------------------------
