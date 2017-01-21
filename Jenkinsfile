@@ -36,27 +36,7 @@ node {
 		currentBuild.result = 'FAILURE'
 		throw err
 	}
-    // ------------------------------------
-	// -- ETAPA: Generando Javadocs
-	// ------------------------------------
-    checkout scm
-    def mavenSettingsFile = " ${mvnHome}/conf/settings.xml"
-	stage 'Build Web App'
-	
-	sh "mvn -s ${mavenSettingsFile} clean source:jar javadoc:javadoc checkstyle:checkstyle pmd:pmd findbugs:findbugs package"
-	
-	step([$class: 'ArtifactArchiver', artifacts: 'currency-converter-api/target/*.war'])
-	step([$class: 'WarningsPublisher', consoleParsers: [[parserName: 'Maven']]])
-	step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
-	step([$class: 'JavadocArchiver', javadocDir: 'currency-converter-api/target/site/apidocs/'])
-	
-	// Use hudson.plugins.checkstyle.CheckStylePublisher if JSLint Publisher Plugin or JSHint Publisher Plugin is installed
-	step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher', pattern: '**/target/checkstyle-result.xml'])
-	// In real life, PMD and Findbugs are unlikely to be used simultaneously
-	step([$class: 'PmdPublisher', pattern: '**/target/pmd.xml'])
-	step([$class: 'FindBugsPublisher', pattern: '**/findbugsXml.xml'])
-	step([$class: 'AnalysisPublisher'])
-	
+  
 	// ------------------------------------
 	// -- ETAPA: Instalar
 	// ------------------------------------
@@ -70,4 +50,27 @@ node {
 	stage 'Archivar'
 	echo 'Archiva el paquete el paquete generado en Jenkins'
 	step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar, **/target/*.war', fingerprint: true])
+	
+	  // ------------------------------------
+	// -- ETAPA: Generando Javadocs
+	// ------------------------------------
+    checkout scm
+    def mavenSettingsFile = " ${mvnHome}/conf/settings.xml"
+	stage 'GEnerating Javadoc and Junit Test'
+	
+	sh "mvn -s ${mavenSettingsFile} clean source:jar javadoc:javadoc checkstyle:checkstyle pmd:pmd findbugs:findbugs package"
+	
+	step([$class: 'WarningsPublisher', consoleParsers: [[parserName: 'Maven']]])
+	step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
+	step([$class: 'JavadocArchiver', javadocDir: 'currency-converter-api/target/site/apidocs/'])
+	
+	
+	stage 'Analysis: Checkstyle, PMD, FingBugs..'
+	// Use hudson.plugins.checkstyle.CheckStylePublisher if JSLint Publisher Plugin or JSHint Publisher Plugin is installed
+	step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher', pattern: '**/target/checkstyle-result.xml'])
+	// In real life, PMD and Findbugs are unlikely to be used simultaneously
+	step([$class: 'PmdPublisher', pattern: '**/target/pmd.xml'])
+	step([$class: 'FindBugsPublisher', pattern: '**/findbugsXml.xml'])
+	step([$class: 'AnalysisPublisher'])
+	
 }
