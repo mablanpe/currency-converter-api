@@ -45,10 +45,10 @@ node {
 	
 	sh "mvn -s ${mavenSettingsFile} clean source:jar javadoc:javadoc checkstyle:checkstyle pmd:pmd findbugs:findbugs package"
 	
-	step([$class: 'ArtifactArchiver', artifacts: 'gameoflife-web/target/*.war'])
+	step([$class: 'ArtifactArchiver', artifacts: 'currency-converter-api/target/*.war'])
 	step([$class: 'WarningsPublisher', consoleParsers: [[parserName: 'Maven']]])
 	step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
-	step([$class: 'JavadocArchiver', javadocDir: 'gameoflife-core/target/site/apidocs/'])
+	step([$class: 'JavadocArchiver', javadocDir: 'currency-converter-api/target/site/apidocs/'])
 	
 	// Use hudson.plugins.checkstyle.CheckStylePublisher if JSLint Publisher Plugin or JSHint Publisher Plugin is installed
 	step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher', pattern: '**/target/checkstyle-result.xml'])
