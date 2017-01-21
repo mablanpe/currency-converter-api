@@ -56,13 +56,13 @@ node {
 	// ------------------------------------
     checkout scm
     def mavenSettingsFile = " ${mvnHome}/conf/settings.xml"
-	stage 'GEnerating Javadoc and Junit Test'
+	stage 'Generating Javadoc and Junit Test'
 	
 	sh "mvn -s ${mavenSettingsFile} clean source:jar javadoc:javadoc checkstyle:checkstyle pmd:pmd findbugs:findbugs package"
 	
 	step([$class: 'WarningsPublisher', consoleParsers: [[parserName: 'Maven']]])
 	step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
-	step([$class: 'JavadocArchiver', javadocDir: 'currency-converter-api/target/site/apidocs/'])
+	step([$class: 'JavadocArchiver', javadocDir: '**/target/site/apidocs/'])
 	
 	
 	stage 'Analysis: Checkstyle, PMD, FingBugs..'
