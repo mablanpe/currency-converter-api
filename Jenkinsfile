@@ -40,7 +40,7 @@ node {
 	// -- ETAPA: Generando Javadocs
 	// ------------------------------------
     checkout scm
-    def mavenSettingsFile = "${pwd()}/.m2/settings.xml"
+    def mavenSettingsFile = " ${mvnHome}/conf/settings.xml"
 	stage 'Build Web App'
 	
 	sh "mvn -s ${mavenSettingsFile} clean source:jar javadoc:javadoc checkstyle:checkstyle pmd:pmd findbugs:findbugs package"
