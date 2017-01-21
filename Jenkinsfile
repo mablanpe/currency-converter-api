@@ -62,7 +62,7 @@ node {
 	
 	step([$class: 'WarningsPublisher', consoleParsers: [[parserName: 'Maven']]])
 	step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
-	step([$class: 'JavadocArchiver', javadocDir: '**/target/site/apidocs/'])
+	//step([$class: 'JavadocArchiver', javadocDir: '**/target/site/apidocs/'])
 	
 	
 	stage 'Analysis: Checkstyle, PMD, FingBugs..'
