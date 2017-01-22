@@ -56,7 +56,7 @@ node {
 	// ------------------------------------
     checkout scm
     def mavenSettingsFile = " ${mvnHome}/conf/settings.xml"
-	stage 'Generating Javadoc and Junit Test'
+	stage 'Generating Javadoc'
 	
 	sh "mvn -s ${mavenSettingsFile} clean source:jar javadoc:javadoc checkstyle:checkstyle pmd:pmd findbugs:findbugs package"
 	
