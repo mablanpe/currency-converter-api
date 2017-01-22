@@ -60,9 +60,7 @@ node {
 	
 	sh "mvn -s ${mavenSettingsFile} clean source:jar javadoc:javadoc checkstyle:checkstyle pmd:pmd findbugs:findbugs package"
 	
-	
-	step([$class: 'JavadocArchiver', javadocDir: '**/src/apidocs/'])
-	
+	step([$class: 'JavadocArchiver', javadocDir: 'target/site/apidocs', keepAll: false])
 	
 	stage 'Analysis: Checkstyle, PMD, FingBugs..'
 	// Use hudson.plugins.checkstyle.CheckStylePublisher if JSLint Publisher Plugin or JSHint Publisher Plugin is installed
